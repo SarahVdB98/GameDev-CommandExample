@@ -75,11 +75,6 @@ namespace TestGame
            
 
             _spriteBatch.End();
-
-           
-
-          
-
            
 
             base.Draw(gameTime);

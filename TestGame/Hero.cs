@@ -13,16 +13,14 @@ using TestGame.Interfaces;
 
 namespace TestGame
 {
-    public class Hero :ITransform
+    public class Hero :ITransform, ICollision
     {
         private Texture2D heroTexture;
-        private Animatie animatie;
-       
-        private Vector2 snelheid;
-        private Vector2 versnelling;
-        private Vector2 mouseVector;
-        public Vector2 Position { get; set; }
 
+        private Animatie animatie;       
+       
+        public Vector2 Position { get; set; }
+        public Rectangle CollisinRectangle { get ; set ; }
 
         private IInputReader inputReader;
         private IInputReader mouseReader;
@@ -39,10 +37,7 @@ namespace TestGame
             animatie.AddFrame(new AnimationFrame(new Rectangle(280, 0, 280, 385)));
             animatie.AddFrame(new AnimationFrame(new Rectangle(560, 0, 280, 385)));
             animatie.AddFrame(new AnimationFrame(new Rectangle(840, 0, 280, 385)));
-            animatie.AddFrame(new AnimationFrame(new Rectangle(1120, 0, 280, 385)));
-           // positie = new Vector2(10, 10);
-            snelheid = new Vector2(1, 1);
-            versnelling = new Vector2(0.1f, 0.1f);
+            animatie.AddFrame(new AnimationFrame(new Rectangle(1120, 0, 280, 385)));    
 
 
             //Read input for my hero class
@@ -50,8 +45,7 @@ namespace TestGame
             mouseReader = new MouseReader();
 
             moveCommand = new MoveCommand();
-            moveToCommand = new MoveToCommando();
-         
+            moveToCommand = new MoveToCommando();         
 
         }
 
@@ -73,34 +67,13 @@ namespace TestGame
         private void MoveHorizontal(Vector2 _direction)
         {
             moveCommand.Execute(this, _direction);
-        }
-      
+        }    
 
-        //private Vector2 GetMouseState()
-        //{
-        //    MouseState state = Mouse.GetState();
-        //    mouseVector = new Vector2(state.X, state.Y);
-        //    return mouseVector;
-        //}
+       
 
         private void Move(Vector2 mouse) 
         {
             moveToCommand.Execute(this, mouse);
-           
-
-
-            //if (positie.X > 600 || positie.X < 0)
-            //{
-            //    snelheid.X *= -1;
-            //    versnelling.X *= -1;
-               
-            //}
-            //if (positie.Y > 400 || positie.Y < 0)
-            //{
-            //    snelheid.Y *= -1;
-            //    versnelling *= -1;
-               
-            //}
 
         }
 
