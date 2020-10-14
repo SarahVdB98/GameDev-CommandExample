@@ -2,22 +2,29 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TestGame.interfaces;
+using TestGame.Interfaces;
 
 namespace TestGame.Commands
 {
-    public class MoveToCommand : IGameCommand
+    public class MoveToCommando : IGameCommand
     {
-        Vector2 speed;
+        private Vector2 snelheid;
+
+        public MoveToCommando()
+        {
+            snelheid = new Vector2(1, 0);
+        }
+      
         public void Execute(ITransform transform, Vector2 direction)
         {
-            var directionToGo = Vector2.Add(direction, -transform.Position);
-            directionToGo.Normalize();
-            directionToGo = Vector2.Multiply(directionToGo, 0.1f);
+            direction = Vector2.Add(direction, -transform.Position);
+            direction.Normalize();
+            direction = Vector2.Multiply(direction, 0.1f);
 
-            speed += directionToGo;
-            speed = Limit(speed, 10);
-            transform.Position += speed;
+            snelheid += direction;
+            snelheid = Limit(snelheid, 6);
+            transform.Position += snelheid;
+
         }
 
         public void Undo()
@@ -36,4 +43,7 @@ namespace TestGame.Commands
             return v;
         }
     }
+
+   
+
 }

@@ -5,33 +5,34 @@ using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Windows.Input;
 using TestGame.Animation;
 using TestGame.Commands;
 using TestGame.Input;
-using TestGame.interfaces;
+using TestGame.Interfaces;
 
 namespace TestGame
 {
-    public class Hero : IGameObject, ITransform
+    public class Hero :ITransform
     {
         private Texture2D heroTexture;
         private Animatie animatie;
-     
-     
-        private IInputReader inputReader;
-        private IInputReader mouseReader;
-        private IGameCommand moveCommand;
-        private IGameCommand moveToCommand;
        
-
+        private Vector2 snelheid;
+        private Vector2 versnelling;
+        private Vector2 mouseVector;
         public Vector2 Position { get; set; }
 
-        public Hero(Texture2D texture, IInputReader inputReader)
-        {
-            
+
+        private IInputReader inputReader;
+        private IInputReader mouseReader;
+
+        private IGameCommand moveCommand;
+        private IGameCommand moveToCommand;
+
+       
+        public Hero(Texture2D texture, IInputReader reader)
+        {            
             heroTexture = texture;
             animatie = new Animatie();
             animatie.AddFrame(new AnimationFrame(new Rectangle(0, 0, 280, 385)));
@@ -39,48 +40,71 @@ namespace TestGame
             animatie.AddFrame(new AnimationFrame(new Rectangle(560, 0, 280, 385)));
             animatie.AddFrame(new AnimationFrame(new Rectangle(840, 0, 280, 385)));
             animatie.AddFrame(new AnimationFrame(new Rectangle(1120, 0, 280, 385)));
+           // positie = new Vector2(10, 10);
+            snelheid = new Vector2(1, 1);
+            versnelling = new Vector2(0.1f, 0.1f);
 
-            //Initialize commands
-            Position = new Vector2(10, 10); 
+
+            //Read input for my hero class
+            this.inputReader = reader;
+            mouseReader = new MouseReader();
+
             moveCommand = new MoveCommand();
-            moveToCommand = new MoveToCommand();
-
-            //Initialize input
-            this.inputReader = inputReader;
-            this.mouseReader = new MouseReader();
-
+            moveToCommand = new MoveToCommando();
+         
 
         }
 
         public void Update(GameTime gameTime)
         {
-            Vector2 direction = inputReader.ReadInput();
 
-            if (inputReader.ReadUndo())
-            {
-                var mouseVector = mouseReader.ReadInput();
-                Move(mouseVector);
-            }
+            var direction = inputReader.ReadInput();
 
-            if(direction !=Vector2.Zero)
-                MoveHero(direction);
-          
+            MoveHorizontal(direction);
+         
+            if(inputReader.ReadFollower())
+                Move(mouseReader.ReadInput());
+
+
             animatie.Update(gameTime);
 
         }
-        public void MoveHero(Vector2 direction)
-        {         
-            moveCommand.Execute(this,direction);   
+
+        private void MoveHorizontal(Vector2 _direction)
+        {
+            moveCommand.Execute(this, _direction);
         }
-    
+      
+
+        //private Vector2 GetMouseState()
+        //{
+        //    MouseState state = Mouse.GetState();
+        //    mouseVector = new Vector2(state.X, state.Y);
+        //    return mouseVector;
+        //}
 
         private void Move(Vector2 mouse) 
         {
-            moveToCommand.Execute(this, mouse); 
+            moveToCommand.Execute(this, mouse);
+           
+
+
+            //if (positie.X > 600 || positie.X < 0)
+            //{
+            //    snelheid.X *= -1;
+            //    versnelling.X *= -1;
+               
+            //}
+            //if (positie.Y > 400 || positie.Y < 0)
+            //{
+            //    snelheid.Y *= -1;
+            //    versnelling *= -1;
+               
+            //}
+
         }
 
-      
-
+   
 
         public void Draw(SpriteBatch spriteBatch)
         {

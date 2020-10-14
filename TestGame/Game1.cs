@@ -44,9 +44,8 @@ namespace TestGame
         }
 
         private void InitialzeGameObjects()
-        {
-            IInputReader reader = new KeyBoardReader();
-            hero = new Hero(texture,reader);
+        {          
+            hero = new Hero(texture, new KeyBoardReader());
         }
 
         protected override void Update(GameTime gameTime)

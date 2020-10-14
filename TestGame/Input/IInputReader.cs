@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestGame.Interfaces
+namespace TestGame.Input
 {
-    public interface ITransform
+    public interface IInputReader
     {
-        Vector2 Position { get; set; }
+        Vector2 ReadInput();
+
+        bool ReadFollower();
     }
 }

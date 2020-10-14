@@ -8,16 +8,16 @@ namespace TestGame.Input
 {
     public class MouseReader : IInputReader
     {
+        public bool ReadFollower()
+        {
+            throw new NotImplementedException();
+        }
+
         public Vector2 ReadInput()
         {
             MouseState state = Mouse.GetState();
-            Vector2 mouseVector = new Vector2(state.X, state.Y);
+            var mouseVector = new Vector2(state.X, state.Y);
             return mouseVector;
-        }
-
-        public bool ReadUndo()
-        {
-            throw new NotImplementedException();
         }
     }
 }
